@@ -38,7 +38,6 @@ public class OrderDataAccessMapper {
 
     private OrderItem orderItemEntityToOrderItem(OrderItemEntity orderItemEntity) {
         return OrderItem.builder()
-                .orderItemId(orderItemEntity.getOrderItemId())
                 .orderId(orderItemEntity.getOrder().getId())
                 .price(new Money(orderItemEntity.getPrice()))
                 .subTotal(new Money(orderItemEntity.getSubTotal()))
@@ -48,7 +47,6 @@ public class OrderDataAccessMapper {
 
     public OrderItemEntity orderItemToOrderItemEntity(OrderItem item) {
         return OrderItemEntity.builder()
-                .orderItemId(item.getOrderItemId())
                 .product(productMapper.productToProductEntity(item.getProduct()))
                 .order(OrderEntity.builder().id(item.getOrderId()).build())
                 .quantity(item.getQuantity())

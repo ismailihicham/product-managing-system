@@ -4,13 +4,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Getter
 @Setter
 @Builder
 public class OrderItem {
-    private Long orderItemId;
     private UUID orderId;
     private Product product;
     private int quantity;
@@ -23,9 +23,19 @@ public class OrderItem {
                 && price.multiply(quantity).equals(subTotal);
     }
 
-    public void initializeOrderItem(UUID orderId, Long orderItemId) {
-        this.orderItemId = orderItemId;
+    public void initializeOrderItem(UUID orderId) {
         this.orderId = orderId;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderItem orderItem = (OrderItem) o;
+        return quantity == orderItem.quantity && Objects.equals(orderId, orderItem.orderId) && Objects.equals(product, orderItem.product) && Objects.equals(price, orderItem.price) && Objects.equals(subTotal, orderItem.subTotal);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(orderId, product, quantity, price, subTotal);
+    }
 }

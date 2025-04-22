@@ -25,16 +25,14 @@ public class Order {
     }
 
     private void initializeOrderItems() {
-        long itemId = 1L;
         for (OrderItem item : items) {
-            item.initializeOrderItem(this.getOrderId(), itemId++);
+            item.initializeOrderItem(this.getOrderId());
         }
     }
 
     public void addItemToOrder(List<OrderItem> newItems) {
-        long itemId = this.items.size() + 1;
         for (OrderItem item : items) {
-            item.initializeOrderItem(this.getOrderId(), itemId++);
+            item.initializeOrderItem(this.getOrderId());
         }
         this.items.addAll(newItems);
         var total = newItems.stream()
@@ -47,11 +45,10 @@ public class Order {
     public void removeFromOrder(List<OrderItem> itemsToRemove) {
         this.items.removeIf(item ->
                 itemsToRemove.stream()
-                        .anyMatch(toRemove -> toRemove.getOrderItemId().equals(item.getOrderItemId()))
+                        .anyMatch(toRemove -> toRemove.equals(item))
         );
-        long itemId = this.items.size() + 1;
         for (OrderItem item : items) {
-            item.initializeOrderItem(this.getOrderId(), itemId++);
+            item.initializeOrderItem(this.getOrderId());
         }
         var total = itemsToRemove.stream()
                 .map(item -> item.getSubTotal())

@@ -55,6 +55,35 @@ INSERT INTO user_account (user_id, user_name, first_name, email, password) VALUE
 ('ce7b2ab2-21fa-4e3b-952d-8c68f3d254fa', 'bob.smith', 'Bob', 'bob.smith@example.com', '$2a$10$1234567890abcdefghiJKLMnopQRSTuvwxYZabc1234567890ab'),
 ('a05dbe47-8f04-4f94-bfac-c36d2eaf4d7b', 'charlie.brown', 'Charlie', 'charlie.brown@example.com', '$2a$10$zxywvutsrqpONMLkjihgFEDCba9876543210ZXCVbnmasdfghjkl');
 
+-- OrderEntity table
+CREATE TABLE orders (
+    id UUID PRIMARY KEY,
+    customer_id UUID NOT NULL,
+    price DECIMAL(10, 2) NOT NULL
+);
+
+-- OrderItemEntity table
+CREATE TABLE order_items (
+    order_item_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    order_id UUID NOT NULL,
+    product_id BIGINT NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    quantity INT NOT NULL,
+    sub_total DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(product_id)
+);
+
+-- Insert an order
+INSERT INTO orders (id, customer_id, price) VALUES
+('c3fa2c56-6e3c-4d0d-baf9-e98a6b2b234d', '9f8a62b0-1e1c-4a6a-b0f3-c6d3f0e9a7fa', 1559.97);
+
+-- Insert order items
+INSERT INTO order_items (order_id, product_id, price, quantity, sub_total) VALUES
+('c3fa2c56-6e3c-4d0d-baf9-e98a6b2b234d', 1, 1499.99, 1, 1499.99),
+('c3fa2c56-6e3c-4d0d-baf9-e98a6b2b234d', 2, 29.99, 2, 59.98);
+
+
 
 
 
