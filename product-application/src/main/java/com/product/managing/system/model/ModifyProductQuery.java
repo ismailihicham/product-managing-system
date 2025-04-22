@@ -1,4 +1,4 @@
-package com.product.managing.system.dto.product;
+package com.product.managing.system.model;
 
 import com.product.managing.system.entities.Product;
 import jakarta.validation.constraints.NotNull;
@@ -9,10 +9,7 @@ import java.util.UUID;
 
 @Builder
 @Getter
-public class UpdateProductCommand {
-
-    @NotNull
-    private final UUID productId;
+public class ModifyProductQuery {
 
     @NotNull
     private final UUID userId;
@@ -20,8 +17,7 @@ public class UpdateProductCommand {
     @NotNull
     private final Product product;
 
-    public UpdateProductCommand(UUID productId, UUID userId, Product product) {
-        this.productId = productId;
+    public ModifyProductQuery(UUID userId, Product product) {
         this.userId = userId;
         this.product = product;
     }
