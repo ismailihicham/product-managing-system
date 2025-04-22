@@ -1,11 +1,15 @@
 package com.product.managing.system.ports.input;
 
+import com.product.managing.system.dto.account.AccountCommandResponse;
+import com.product.managing.system.dto.account.CreateAccountCommand;
+import com.product.managing.system.dto.account.GetAccountResponse;
 import com.product.managing.system.dto.order.CreateOrderCommand;
 import com.product.managing.system.dto.order.OrderCommandResponse;
 import com.product.managing.system.dto.order.UpdateOrderCommand;
 import com.product.managing.system.dto.product.CreateProductCommand;
 import com.product.managing.system.dto.product.ProductCommandResponse;
 import com.product.managing.system.dto.product.UpdateProductCommand;
+import com.product.managing.system.entities.Account;
 import com.product.managing.system.entities.Product;
 
 import java.util.List;
@@ -27,5 +31,9 @@ public interface UseCasesDomainService {
     List<Product> retrieveAllProducts();
 
     Product retrieveProductInfo(UUID productId);
+
+    AccountCommandResponse createAccount(CreateAccountCommand createAccountCommand);
+
+    GetAccountResponse findAccountInfo(UUID accountId);
 
 }

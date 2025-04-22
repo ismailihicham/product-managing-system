@@ -40,5 +40,21 @@ INSERT INTO product (
   'Accessories', 12.00, 0, 'INT-REF-003', 103, 'OUTOFSTOCK', 3,
   '2025-02-10T08:00:00+01:00', '2025-04-09T13:20:00+01:00'
 );
+DROP TABLE IF EXISTS user_account;
+
+CREATE TABLE user_account (
+    user_id UUID PRIMARY KEY,
+    user_name VARCHAR(100) NOT NULL,
+    first_name VARCHAR(100) NOT NULL,
+    email VARCHAR(150) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL
+);
+
+INSERT INTO user_account (user_id, user_name, first_name, email, password) VALUES
+('9f8a62b0-1e1c-4a6a-b0f3-c6d3f0e9a7fa', 'alice.johnson', 'Alice', 'alice.johnson@example.com', '$2a$10$ABCDeFgHijKlmNopQrStu.VWxYz0123456789abcdefghiJklMNOpq'),
+('ce7b2ab2-21fa-4e3b-952d-8c68f3d254fa', 'bob.smith', 'Bob', 'bob.smith@example.com', '$2a$10$1234567890abcdefghiJKLMnopQRSTuvwxYZabc1234567890ab'),
+('a05dbe47-8f04-4f94-bfac-c36d2eaf4d7b', 'charlie.brown', 'Charlie', 'charlie.brown@example.com', '$2a$10$zxywvutsrqpONMLkjihgFEDCba9876543210ZXCVbnmasdfghjkl');
+
+
 
 

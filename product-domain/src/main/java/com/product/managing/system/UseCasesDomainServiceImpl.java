@@ -1,5 +1,8 @@
 package com.product.managing.system;
 
+import com.product.managing.system.dto.account.AccountCommandResponse;
+import com.product.managing.system.dto.account.CreateAccountCommand;
+import com.product.managing.system.dto.account.GetAccountResponse;
 import com.product.managing.system.dto.order.CreateOrderCommand;
 import com.product.managing.system.dto.order.OrderCommandResponse;
 import com.product.managing.system.dto.order.UpdateOrderCommand;
@@ -9,9 +12,9 @@ import com.product.managing.system.dto.product.UpdateProductCommand;
 import com.product.managing.system.entities.Account;
 import com.product.managing.system.entities.Product;
 import com.product.managing.system.exception.DomainException;
+import com.product.managing.system.mapper.AccountDataMapper;
 import com.product.managing.system.ports.input.UseCasesDomainService;
 import com.product.managing.system.ports.output.AccountRepository;
-import com.product.managing.system.ports.output.OrderRepository;
 import com.product.managing.system.ports.output.ProductRepository;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
@@ -26,15 +29,18 @@ import java.util.UUID;
 @Slf4j
 @Validated
 public class UseCasesDomainServiceImpl implements UseCasesDomainService {
+    private final AccountDataMapper accountMapper;
     private final ProductRepository productRepository;
     private final AccountRepository accountRepository;
 
     public static final String PROUCT_REMOVE_SUCCESSFUL = "product is removed successfully";
 
     public UseCasesDomainServiceImpl(
+            AccountDataMapper accountMapper,
             ProductRepository productRepository,
             AccountRepository accountRepository
     ) {
+        this.accountMapper = accountMapper;
         this.productRepository = productRepository;
         this.accountRepository = accountRepository;
     }
@@ -51,7 +57,7 @@ public class UseCasesDomainServiceImpl implements UseCasesDomainService {
 
     @Override
     public ProductCommandResponse createProduct(CreateProductCommand createProductCommand) {
-        checkUser(createProductCommand.getUserId());
+        findAccount(createProductCommand.getUserId());
         createProductCommand.getProduct().validateInitializeProduct();
         createProductCommand.getProduct().initializeProduct();
         var savedProduct = saveProduct(createProductCommand.getProduct());
@@ -73,17 +79,20 @@ public class UseCasesDomainServiceImpl implements UseCasesDomainService {
         return productResult;
     }
 
-    private void checkUser(@NotNull UUID userId) {
-        Optional<Account> user = accountRepository.findUser(userId);
-        if (user.isEmpty()) {
-            log.error("Could not find user with id {}", userId);
-            throw new DomainException("Could not find customer with id " + userId);
+    private Optional<Account> findAccount(@NotNull UUID accountId) {
+        Optional<Account> account;
+        try {
+             account = Optional.ofNullable(accountRepository.findAccount(accountId));
+        } catch (Exception e) {
+            log.error("Could not find user with id {}", accountId);
+            throw new DomainException("Could not find customer with id " + accountId);
         }
+        return account;
     }
 
     @Override
     public ProductCommandResponse updateProduct(UpdateProductCommand updateProductCommand) {
-        checkUser(updateProductCommand.getUserId());
+        findAccount(updateProductCommand.getUserId());
         var product = findProduct(updateProductCommand.getProductId());
         var updatedP = saveProduct(product.updateProduct(updateProductCommand.getProduct()));
         log.info("product is updated successfully with id {}", updatedP.getProductId());
@@ -123,5 +132,19 @@ public class UseCasesDomainServiceImpl implements UseCasesDomainService {
     @Override
     public Product retrieveProductInfo(UUID productId) {
         return findProduct(productId);
+    }
+
+    @Override
+    public AccountCommandResponse createAccount(CreateAccountCommand createAccountCommand) {
+        var response = accountRepository.createAccount(
+                accountMapper.createAccountCommandToAccount(createAccountCommand)
+        );
+        return accountMapper.accountToAccountCommandResponse(response);
+    }
+
+    @Override
+    public GetAccountResponse findAccountInfo(UUID accountId) {
+        var response = accountRepository.findAccount(accountId);
+        return accountMapper.accountToGetAccountResponse(response);
     }
 }

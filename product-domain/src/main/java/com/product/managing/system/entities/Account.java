@@ -14,7 +14,9 @@ public class Account {
     private UUID accountId;
     private String firstName;
     private String lastName;
+    private String userName;
     private String email;
+    private String password;
 
     public void validateAccountPersonalInfo() {
         if (this.firstName == null || this.lastName == null || this.email == null) {
