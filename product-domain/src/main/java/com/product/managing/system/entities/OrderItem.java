@@ -10,7 +10,7 @@ import java.util.UUID;
 @Setter
 @Builder
 public class OrderItem {
-    private UUID orderItemId;
+    private Long orderItemId;
     private UUID orderId;
     private Product product;
     private int quantity;
@@ -23,8 +23,9 @@ public class OrderItem {
                 && price.multiply(quantity).equals(subTotal);
     }
 
-    public void initializeOrderItem(UUID orderId, UUID orderItemId) {
+    public void initializeOrderItem(UUID orderId, Long orderItemId) {
         this.orderItemId = orderItemId;
         this.orderId = orderId;
     }
+
 }

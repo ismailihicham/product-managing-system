@@ -3,18 +3,20 @@ package com.product.managing.system;
 import com.product.managing.system.dto.account.AccountCommandResponse;
 import com.product.managing.system.dto.account.CreateAccountCommand;
 import com.product.managing.system.dto.account.GetAccountResponse;
-import com.product.managing.system.dto.order.CreateOrderCommand;
-import com.product.managing.system.dto.order.OrderCommandResponse;
-import com.product.managing.system.dto.order.UpdateOrderCommand;
+import com.product.managing.system.dto.order.*;
 import com.product.managing.system.dto.product.CreateProductCommand;
 import com.product.managing.system.dto.product.ProductCommandResponse;
 import com.product.managing.system.dto.product.UpdateProductCommand;
 import com.product.managing.system.entities.Account;
+import com.product.managing.system.entities.Order;
+import com.product.managing.system.entities.OrderStatus;
 import com.product.managing.system.entities.Product;
 import com.product.managing.system.exception.DomainException;
 import com.product.managing.system.mapper.AccountDataMapper;
+import com.product.managing.system.mapper.OrderDataMapper;
 import com.product.managing.system.ports.input.UseCasesDomainService;
 import com.product.managing.system.ports.output.AccountRepository;
+import com.product.managing.system.ports.output.OrderRepository;
 import com.product.managing.system.ports.output.ProductRepository;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +31,8 @@ import java.util.UUID;
 @Slf4j
 @Validated
 public class UseCasesDomainServiceImpl implements UseCasesDomainService {
+    private final OrderRepository orderRepository;
+    private final OrderDataMapper orderMapper;
     private final AccountDataMapper accountMapper;
     private final ProductRepository productRepository;
     private final AccountRepository accountRepository;
@@ -36,30 +40,73 @@ public class UseCasesDomainServiceImpl implements UseCasesDomainService {
     public static final String PROUCT_REMOVE_SUCCESSFUL = "product is removed successfully";
 
     public UseCasesDomainServiceImpl(
-            AccountDataMapper accountMapper,
+            OrderRepository orderRepository, OrderDataMapper orderMapper, AccountDataMapper accountMapper,
             ProductRepository productRepository,
             AccountRepository accountRepository
     ) {
+        this.orderRepository = orderRepository;
+        this.orderMapper = orderMapper;
         this.accountMapper = accountMapper;
         this.productRepository = productRepository;
         this.accountRepository = accountRepository;
     }
 
     @Override
-    public OrderCommandResponse createOrder(CreateOrderCommand createOrderCommand) {
-        return null;
+    public OrderCommandResponse createOrder(OrderCommand createOrderCommand) {
+        findAccount(createOrderCommand.getCustomerId());
+        createOrderCommand.getOrder().initializeOrder();
+        Order order = orderMapper.orderCommandToOrder(createOrderCommand);
+        Order result = orderRepository.saveOrder(order);
+        result.setStatus(OrderStatus.APPROVED);
+        log.info("Order with id {} has been saved successfly", result.getOrderId());
+        return orderMapper.orderToOrderCommandResponse(order);
     }
 
     @Override
-    public OrderCommandResponse updateOrder(UpdateOrderCommand updateOrderCommand) {
-        return null;
+    public OrderCommandResponse cancelOrder(CancelOrderCommand cancelOrderCommand) {
+        orderRepository.cancelOrder(cancelOrderCommand.getOrderId());
+        log.info("Order with id {} has been cancelled successfly", cancelOrderCommand.getOrderId());
+        return OrderCommandResponse.builder()
+                .orderId(cancelOrderCommand.getOrderId())
+                .status(OrderStatus.CANCELLED)
+                .message("Order cancelled successfully")
+                .build();
+    }
+
+    @Override
+    public OrderCommandResponse addItemsToOrder(AddItemCommand updateOrderCommand) {
+        var newItems = updateOrderCommand.getItems();
+        var order = updateOrderCommand.getOrder();
+        order.addItemToOrder(newItems);
+        Order result = orderRepository.saveOrder(order);
+        log.info("Order with id {} has updated with more items", order.getOrderId());
+        return OrderCommandResponse.builder()
+                .orderId(result.getOrderId())
+                .status(OrderStatus.UPDATED)
+                .message("order is updated")
+                .build();
+    }
+
+    @Override
+    public OrderCommandResponse removeItemsFromOrder(RemoveItemsCommand updateOrderCommand) {
+        findAccount(updateOrderCommand.getCustomerId());
+        var itemsToRemove = updateOrderCommand.getItems();
+        var order = updateOrderCommand.getOrder();
+        order.removeFromOrder(itemsToRemove);
+        Order result = orderRepository.saveOrder(order);
+        log.info("Order with id {} has updated by removing some items", order.getOrderId());
+        return OrderCommandResponse.builder()
+                .orderId(result.getOrderId())
+                .status(OrderStatus.UPDATED)
+                .message("order is updated")
+                .build();
     }
 
     @Override
     public ProductCommandResponse createProduct(CreateProductCommand createProductCommand) {
         findAccount(createProductCommand.getUserId());
-        createProductCommand.getProduct().validateInitializeProduct();
         createProductCommand.getProduct().initializeProduct();
+        createProductCommand.getProduct().validateInitializeProduct();
         var savedProduct = saveProduct(createProductCommand.getProduct());
         log.info("product is created with id {}", savedProduct.getProductId());
 

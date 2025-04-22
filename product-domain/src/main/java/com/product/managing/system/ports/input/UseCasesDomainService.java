@@ -3,24 +3,24 @@ package com.product.managing.system.ports.input;
 import com.product.managing.system.dto.account.AccountCommandResponse;
 import com.product.managing.system.dto.account.CreateAccountCommand;
 import com.product.managing.system.dto.account.GetAccountResponse;
-import com.product.managing.system.dto.order.CreateOrderCommand;
-import com.product.managing.system.dto.order.OrderCommandResponse;
-import com.product.managing.system.dto.order.UpdateOrderCommand;
+import com.product.managing.system.dto.order.*;
 import com.product.managing.system.dto.product.CreateProductCommand;
 import com.product.managing.system.dto.product.ProductCommandResponse;
 import com.product.managing.system.dto.product.UpdateProductCommand;
-import com.product.managing.system.entities.Account;
 import com.product.managing.system.entities.Product;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public interface UseCasesDomainService {
 
-    OrderCommandResponse createOrder(CreateOrderCommand createOrderCommand);
+    OrderCommandResponse createOrder(OrderCommand createOrderCommand);
 
-    OrderCommandResponse updateOrder(UpdateOrderCommand updateOrderCommand);
+    OrderCommandResponse cancelOrder(CancelOrderCommand cancelOrderCommand);
+
+    OrderCommandResponse addItemsToOrder(AddItemCommand updateOrderCommand);
+
+    OrderCommandResponse removeItemsFromOrder(RemoveItemsCommand updateOrderCommand);
 
     ProductCommandResponse createProduct(CreateProductCommand createProductCommand);
 

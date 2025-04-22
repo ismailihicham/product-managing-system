@@ -1,5 +1,6 @@
 package com.product.managing.system.dataaccess.product.entities;
 
+import com.product.managing.system.dataaccess.order.entities.OrderItemEntity;
 import com.product.managing.system.entities.InventoryStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -19,6 +20,10 @@ public class ProductEntity {
     @Id
     @Column(name = "product_id", columnDefinition = "UUID")
     private UUID productId;
+
+    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL)
+    private OrderItemEntity orderItem;
+
     private String code;
     private String name;
     private String description;

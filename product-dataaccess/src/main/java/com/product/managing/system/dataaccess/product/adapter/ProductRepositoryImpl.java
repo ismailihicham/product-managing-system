@@ -2,7 +2,7 @@ package com.product.managing.system.dataaccess.product.adapter;
 
 import com.product.managing.system.entities.Product;
 import com.product.managing.system.ports.output.ProductRepository;
-import com.product.managing.system.dataaccess.product.mapper.ProductDataMapper;
+import com.product.managing.system.dataaccess.product.mapper.ProductDataAccessMapper;
 import com.product.managing.system.dataaccess.product.repository.ProductJpaRepository;
 import org.springframework.stereotype.Component;
 
@@ -14,9 +14,9 @@ import java.util.UUID;
 public class ProductRepositoryImpl implements ProductRepository {
 
     private final ProductJpaRepository jpaRepository;
-    private final ProductDataMapper mapper;
+    private final ProductDataAccessMapper mapper;
 
-    public ProductRepositoryImpl(ProductJpaRepository jpaRepository, ProductDataMapper mapper) {
+    public ProductRepositoryImpl(ProductJpaRepository jpaRepository, ProductDataAccessMapper mapper) {
         this.jpaRepository = jpaRepository;
         this.mapper = mapper;
     }

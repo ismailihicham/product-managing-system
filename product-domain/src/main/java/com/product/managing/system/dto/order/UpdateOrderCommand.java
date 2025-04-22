@@ -1,4 +1,18 @@
 package com.product.managing.system.dto.order;
 
-public class UpdateOrderCommand {
+import com.product.managing.system.entities.Order;
+import com.product.managing.system.entities.OrderItem;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.List;
+import java.util.UUID;
+
+@Getter
+@Setter
+public abstract class UpdateOrderCommand {
+    private List<OrderItem> items;
+    private Order order;
+    private UUID customerId;
+
 }

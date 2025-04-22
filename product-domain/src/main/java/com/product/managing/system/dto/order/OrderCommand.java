@@ -1,23 +1,22 @@
 package com.product.managing.system.dto.order;
 
-import com.product.managing.system.entities.OrderStatus;
+import com.product.managing.system.entities.Order;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.UUID;
 
+@Builder
 @AllArgsConstructor
 @Getter
-@Builder
-public class OrderCommandResponse {
-    @NotNull
-    private UUID orderId;
+@Setter
+public class OrderCommand {
 
     @NotNull
-    private OrderStatus status;
-
+    private final UUID customerId;
     @NotNull
-    private String message;
+    private final Order order;
 }

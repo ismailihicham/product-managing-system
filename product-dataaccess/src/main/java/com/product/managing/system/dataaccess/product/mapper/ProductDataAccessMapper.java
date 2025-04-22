@@ -6,7 +6,7 @@ import com.product.managing.system.dataaccess.product.entities.ProductEntity;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ProductDataMapper {
+public class ProductDataAccessMapper {
 
     public ProductEntity productToProductEntity(Product product) {
         return ProductEntity.builder()
