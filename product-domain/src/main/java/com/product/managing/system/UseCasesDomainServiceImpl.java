@@ -108,7 +108,6 @@ public class UseCasesDomainServiceImpl implements UseCasesDomainService {
 
     @Override
     public ProductCommandResponse createProduct(CreateProductCommand createProductCommand) {
-        findAccount(createProductCommand.getUserId());
         createProductCommand.getProduct().validateInitializeProduct();
         createProductCommand.getProduct().initializeProduct();
         var savedProduct = saveProduct(createProductCommand.getProduct());
@@ -143,7 +142,6 @@ public class UseCasesDomainServiceImpl implements UseCasesDomainService {
 
     @Override
     public ProductCommandResponse updateProduct(UpdateProductCommand updateProductCommand) {
-        findAccount(updateProductCommand.getUserId());
         var existingProduct = findProduct(updateProductCommand.getProductId());
         var productUp = existingProduct.updateProduct(updateProductCommand);
         var updatedP = saveProduct(productUp);

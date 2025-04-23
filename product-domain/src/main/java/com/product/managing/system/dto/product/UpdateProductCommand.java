@@ -13,16 +13,11 @@ public class UpdateProductCommand {
 
     @NotNull
     private final UUID productId;
-
-    @NotNull
-    private final UUID userId;
-
     @NotNull
     private final Product product;
 
-    public UpdateProductCommand(UUID productId, UUID userId, Product product) {
+    public UpdateProductCommand(UUID productId, Product product) {
         this.productId = productId;
-        this.userId = userId;
         this.product = product;
     }
 }

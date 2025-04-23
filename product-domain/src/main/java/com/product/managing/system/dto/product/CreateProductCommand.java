@@ -13,13 +13,9 @@ import java.util.UUID;
 @Builder
 public class CreateProductCommand {
     @NotNull
-    private final UUID userId;
-
-    @NotNull
     private final Product product;
 
-    public CreateProductCommand(UUID userId, Product product) {
-        this.userId = userId;
+    public CreateProductCommand(Product product) {
         this.product = product;
     }
 }

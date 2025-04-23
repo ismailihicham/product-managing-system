@@ -85,7 +85,6 @@ public class UseCasesDomainServiceTest {
                 .build();
         createProductCommand = CreateProductCommand.builder()
                 .product(product)
-                .userId(USER_ID)
                 .build();
         order = Order.builder()
                 .customerId(USER_ID)
@@ -127,7 +126,6 @@ public class UseCasesDomainServiceTest {
         UpdateProductCommand updateProductCommand = UpdateProductCommand
                 .builder()
                 .productId(PRODUCT_ID)
-                .userId(USER_ID)
                 .product(productUp)
                 .build();
         var p = product.updateProduct(updateProductCommand);

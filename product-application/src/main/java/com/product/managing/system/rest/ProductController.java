@@ -30,8 +30,8 @@ public class ProductController {
     public ResponseEntity<ProductCommandResponse> createOrder(@RequestBody CreateProductCommand createProductCommand) {
         ProductCommandResponse response = useCases.createProduct(createProductCommand);
         log.info(
-                "create product : {}  for user : {}",
-                response.getProductId(), createProductCommand.getUserId()
+                "create product with ID : {} is done successfully",
+                response.getProductId()
         );
         return ResponseEntity.ok(response);
     }
@@ -45,13 +45,12 @@ public class ProductController {
                 .builder()
                 .productId(productId)
                 .product(modifyProductQuery.getProduct())
-                .userId(modifyProductQuery.getUserId())
                 .build();
 
         ProductCommandResponse response = useCases.updateProduct(updateProductCommand);
         log.info(
-                "product with id : {}  is updated successfully with new id {}",
-                updateProductCommand.getProductId(), response.getProductId()
+                "product with id : {}  is updated successfully",
+                updateProductCommand.getProductId()
         );
         return ResponseEntity.ok(response);
     }
