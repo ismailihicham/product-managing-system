@@ -8,7 +8,7 @@ CREATE TABLE product (
     image VARCHAR(512),
     category VARCHAR(255),
     price NUMERIC(19, 2),
-    quantity INTEGER,
+    quantity INTEGER NOT NULL,
     internal_reference VARCHAR(255),
     shell_id BIGINT,
     inventory_status VARCHAR(20),
@@ -70,12 +70,12 @@ DROP TABLE IF EXISTS order_items;
 CREATE TABLE order_items (
     order_item_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     order_id UUID NOT NULL,
-    product_id BIGINT NOT NULL,
+    product_id UUID NOT NULL,
     price DECIMAL(10, 2) NOT NULL,
-    quantity INT NOT NULL,
+    quantity INTEGER NOT NULL,
     sub_total DECIMAL(10, 2) NOT NULL,
     FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
-    FOREIGN KEY (product_id) REFERENCES products(product_id)
+    FOREIGN KEY (product_id) REFERENCES product(product_id)
 );
 
 -- Insert an order
@@ -84,8 +84,8 @@ INSERT INTO orders (id, customer_id, price) VALUES
 
 -- Insert order items
 INSERT INTO order_items (order_id, product_id, price, quantity, sub_total) VALUES
-('c3fa2c56-6e3c-4d0d-baf9-e98a6b2b234d', 1, 1499.99, 1, 1499.99),
-('c3fa2c56-6e3c-4d0d-baf9-e98a6b2b234d', 2, 29.99, 2, 59.98);
+('c3fa2c56-6e3c-4d0d-baf9-e98a6b2b234d', 'ed0f83b8-baba-47b4-83fa-b5a19f6076cf', 1499.99, 1, 1499.99),
+('c3fa2c56-6e3c-4d0d-baf9-e98a6b2b234d', 'bd0f83b8-baba-47b4-83fa-b5a19f6076c2', 29.99, 2, 59.98);
 
 
 

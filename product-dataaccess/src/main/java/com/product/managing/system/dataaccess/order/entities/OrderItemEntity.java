@@ -24,7 +24,8 @@ public class OrderItemEntity {
     @JoinColumn(name = "ORDER_ID")
     private OrderEntity order;
 
-    @JoinColumn(name = "PRODUCT_ID")
+    @JoinColumn(name = "PRODUCT_ID", referencedColumnName = "product_id")
+    @OneToOne
     private ProductEntity product;
     private BigDecimal price;
     private Integer quantity;
