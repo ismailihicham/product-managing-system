@@ -26,8 +26,9 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public Order modifyOrder(UUID orderId, Order order) {
-        return null;
+    public Order modifyOrder(Order order) {
+        var orderEntity = jpaRepository.updateOrInsert(mapper.orderToOrderEntity(order));
+        return mapper.orderEntityToOrder(orderEntity);
     }
 
     @Override

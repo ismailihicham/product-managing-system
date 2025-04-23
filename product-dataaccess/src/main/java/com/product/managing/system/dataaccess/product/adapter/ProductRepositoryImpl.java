@@ -28,6 +28,12 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
+    public Product modifyProduct(Product product) {
+        var productEntity = jpaRepository.updateOrInsert(mapper.productToProductEntity(product));
+        return mapper.productEntityToProduct(productEntity);
+    }
+
+    @Override
     public Optional<Product> findById(UUID productId) {
         var p = jpaRepository.findById(productId);
         return p.map(mapper::productEntityToProduct);

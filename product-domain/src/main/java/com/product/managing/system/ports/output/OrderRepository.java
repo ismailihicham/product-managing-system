@@ -8,7 +8,7 @@ public interface OrderRepository {
 
     Order saveOrder(Order order);
 
-    Order modifyOrder(UUID orderId, Order order);
+    Order modifyOrder(Order order);
 
     void cancelOrder(UUID orderId);
 

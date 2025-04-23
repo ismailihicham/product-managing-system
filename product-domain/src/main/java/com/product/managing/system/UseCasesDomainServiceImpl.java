@@ -82,7 +82,7 @@ public class UseCasesDomainServiceImpl implements UseCasesDomainService {
         var newItems = updateOrderCommand.getItems();
         var order = updateOrderCommand.getOrder();
         order.addItemToOrder(newItems);
-        Order result = orderRepository.saveOrder(order);
+        Order result = orderRepository.modifyOrder(order);
         log.info("Order with id {} has updated with more items", order.getOrderId());
         return OrderCommandResponse.builder()
                 .orderId(result.getOrderId())
@@ -97,7 +97,7 @@ public class UseCasesDomainServiceImpl implements UseCasesDomainService {
         var itemsToRemove = updateOrderCommand.getItems();
         var order = updateOrderCommand.getOrder();
         order.removeFromOrder(itemsToRemove);
-        Order result = orderRepository.saveOrder(order);
+        Order result = orderRepository.modifyOrder(order);
         log.info("Order with id {} has updated by removing some items", order.getOrderId());
         return OrderCommandResponse.builder()
                 .orderId(result.getOrderId())
@@ -144,7 +144,7 @@ public class UseCasesDomainServiceImpl implements UseCasesDomainService {
     public ProductCommandResponse updateProduct(UpdateProductCommand updateProductCommand) {
         var existingProduct = findProduct(updateProductCommand.getProductId());
         var productUp = existingProduct.updateProduct(updateProductCommand);
-        var updatedP = saveProduct(productUp);
+        var updatedP = productRepository.modifyProduct(productUp);
         log.info("product is updated successfully with id {}", updatedP.getProductId());
         return ProductCommandResponse
                 .builder()

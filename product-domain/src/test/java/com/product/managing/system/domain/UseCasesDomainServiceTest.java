@@ -131,7 +131,7 @@ public class UseCasesDomainServiceTest {
         var p = product.updateProduct(updateProductCommand);
 
         when(productRepository.findById(PRODUCT_ID)).thenReturn(Optional.ofNullable(product));
-        when(productRepository.saveProduct(any())).thenReturn(p);
+        when(productRepository.modifyProduct(any())).thenReturn(p);
 
         var response = useCasesDomainService.updateProduct(updateProductCommand);
 
