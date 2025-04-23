@@ -2,6 +2,7 @@ package com.product.managing.system.entities;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Objects;
 
 public class Money {
     public static final Money ZERO = new Money(BigDecimal.ZERO);
@@ -37,5 +38,16 @@ public class Money {
 
     private BigDecimal setScale(BigDecimal input) {
         return input.setScale(2, RoundingMode.HALF_EVEN);
+    }
+
+
+    public boolean equals(Money o) {
+        if (o == null) return false;
+        return Objects.equals(amount, o.amount);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(amount);
     }
 }

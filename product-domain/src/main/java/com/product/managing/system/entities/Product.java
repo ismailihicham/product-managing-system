@@ -1,5 +1,6 @@
 package com.product.managing.system.entities;
 
+import com.product.managing.system.dto.product.UpdateProductCommand;
 import com.product.managing.system.exception.DomainException;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,29 +36,35 @@ public class Product {
     }
 
     public void validateInitializeProduct() {
-        if(this.productId != null || this.updatedAt != null) {
+        if(this.updatedAt != null) {
             throw new DomainException("Product is not in correct state for initialization! ");
         }
     }
 
-    public Product updateProduct(Product p) {
+    public Product updateProduct(UpdateProductCommand updateProductCommand) {
+        var p = updateProductCommand.getProduct();
         return Product.builder()
-                .productId(UUID.randomUUID())
-                .code(p.getCode())
-                .name(p.getName())
-                .description(p.getDescription())
-                .image(p.getImage())
-                .category(p.getCategory())
-                .price(p.getPrice())
-                .quantity(p.getQuantity())
-                .internalReference(p.internalReference)
-                .shellId(p.getShellId())
-                .inventoryStatus(p.getInventoryStatus())
-                .rating(p.getRating())
-                .createdAt(p.getCreatedAt())
+                .productId(updateProductCommand.getProductId())
+                .code(keepIfNull(p.getCode(), getCode()))
+                .name(keepIfNull(p.getName(), getName()))
+                .description(keepIfNull(p.getDescription(), getDescription()))
+                .image(keepIfNull(p.getImage(), getImage()))
+                .category(keepIfNull(p.getCategory(),getCategory()))
+                .price((p.getPrice() != null && !p.getPrice().equals(Money.ZERO)) ? p.getPrice(): getPrice())
+                .quantity(p.getQuantity() != 0 ? p.getQuantity():getQuantity())
+                .internalReference(keepIfNull(p.getInternalReference(), getInternalReference()))
+                .shellId((p.getShellId() != null && p.getShellId() != 0)? p.getShellId(): getShellId())
+                .inventoryStatus(keepIfNull(p.getInventoryStatus(), getInventoryStatus()))
+                .rating((p.getRating() != null && p.getRating() != 0) ? p.getRating(): getRating())
+                .createdAt(getCreatedAt())
                 .updatedAt(ZonedDateTime.now(ZoneId.of("UTC")))
                 .build();
     }
+
+    public static <T> T keepIfNull(T newValue, T currentValue) {
+        return newValue != null ? newValue : currentValue;
+    }
+
 
 
 }

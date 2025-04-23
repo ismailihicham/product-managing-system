@@ -56,6 +56,8 @@ INSERT INTO user_account (user_id, user_name, first_name, email, password) VALUE
 ('a05dbe47-8f04-4f94-bfac-c36d2eaf4d7b', 'charlie.brown', 'Charlie', 'charlie.brown@example.com', '$2a$10$zxywvutsrqpONMLkjihgFEDCba9876543210ZXCVbnmasdfghjkl');
 
 -- OrderEntity table
+DROP TABLE IF EXISTS orders;
+
 CREATE TABLE orders (
     id UUID PRIMARY KEY,
     customer_id UUID NOT NULL,
@@ -63,6 +65,8 @@ CREATE TABLE orders (
 );
 
 -- OrderItemEntity table
+DROP TABLE IF EXISTS order_items;
+
 CREATE TABLE order_items (
     order_item_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     order_id UUID NOT NULL,

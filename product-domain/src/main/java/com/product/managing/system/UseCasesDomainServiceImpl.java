@@ -59,7 +59,11 @@ public class UseCasesDomainServiceImpl implements UseCasesDomainService {
         Order result = orderRepository.saveOrder(order);
         result.setStatus(OrderStatus.APPROVED);
         log.info("Order with id {} has been saved successfly", result.getOrderId());
-        return orderMapper.orderToOrderCommandResponse(order);
+        return OrderCommandResponse.builder()
+                .orderId(order.getOrderId())
+                .status(order.getStatus())
+                .message("ORDER APPROVE AND SAVED")
+                .build();
     }
 
     @Override
@@ -105,8 +109,8 @@ public class UseCasesDomainServiceImpl implements UseCasesDomainService {
     @Override
     public ProductCommandResponse createProduct(CreateProductCommand createProductCommand) {
         findAccount(createProductCommand.getUserId());
-        createProductCommand.getProduct().initializeProduct();
         createProductCommand.getProduct().validateInitializeProduct();
+        createProductCommand.getProduct().initializeProduct();
         var savedProduct = saveProduct(createProductCommand.getProduct());
         log.info("product is created with id {}", savedProduct.getProductId());
 
@@ -140,8 +144,9 @@ public class UseCasesDomainServiceImpl implements UseCasesDomainService {
     @Override
     public ProductCommandResponse updateProduct(UpdateProductCommand updateProductCommand) {
         findAccount(updateProductCommand.getUserId());
-        var product = findProduct(updateProductCommand.getProductId());
-        var updatedP = saveProduct(product.updateProduct(updateProductCommand.getProduct()));
+        var existingProduct = findProduct(updateProductCommand.getProductId());
+        var productUp = existingProduct.updateProduct(updateProductCommand);
+        var updatedP = saveProduct(productUp);
         log.info("product is updated successfully with id {}", updatedP.getProductId());
         return ProductCommandResponse
                 .builder()

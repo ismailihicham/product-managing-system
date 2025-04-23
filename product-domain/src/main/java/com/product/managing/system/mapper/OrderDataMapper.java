@@ -17,12 +17,4 @@ public class OrderDataMapper {
                 .status(OrderStatus.PENDING)
                 .build();
     }
-
-    public OrderCommandResponse orderToOrderCommandResponse(Order order) {
-        return OrderCommandResponse.builder()
-                .orderId(order.getOrderId())
-                .status(order.getStatus())
-                .message("ORDER APPROVE AND SAVED")
-                .build();
-    }
 }
