@@ -12,6 +12,7 @@ import java.util.UUID;
 public class AccountDataMapper {
 
     private final PasswordService passwordService;
+    public static final String ACCOUNT_CREATED_SUCCESSFUL = "Account created successfully";
 
     public AccountDataMapper(PasswordService passwordService) {
         this.passwordService = passwordService;
@@ -25,13 +26,14 @@ public class AccountDataMapper {
                 .lastName(createAccountCommand.getLastName())
                 .email(createAccountCommand.getEmail())
                 .password(passwordService.hashPassword(createAccountCommand.getPassword()))
+                .userName(generateUsername(createAccountCommand.getFirstName(), createAccountCommand.getLastName()))
                 .build();
     }
 
     public AccountCommandResponse accountToAccountCommandResponse(Account account) {
         return AccountCommandResponse.builder()
                 .accountId(account.getAccountId().toString())
-                .message("Account created successfully")
+                .message(ACCOUNT_CREATED_SUCCESSFUL)
                 .userName(account.getUserName())
                 .build();
     }
@@ -43,5 +45,9 @@ public class AccountDataMapper {
                 .firstName(account.getFirstName())
                 .email(account.getEmail())
                 .build();
+    }
+
+    private String generateUsername(String firstName, String lastName) {
+        return (firstName + "." + lastName).toLowerCase().replaceAll("\\s+", "");
     }
 }

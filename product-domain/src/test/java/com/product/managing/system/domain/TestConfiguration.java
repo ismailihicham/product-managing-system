@@ -3,6 +3,7 @@ package com.product.managing.system.domain;
 import com.product.managing.system.UseCasesDomainServiceImpl;
 import com.product.managing.system.mapper.AccountDataMapper;
 import com.product.managing.system.mapper.OrderDataMapper;
+import com.product.managing.system.mapper.PasswordService;
 import com.product.managing.system.ports.input.UseCasesDomainService;
 import com.product.managing.system.ports.output.AccountRepository;
 import com.product.managing.system.ports.output.OrderRepository;
@@ -37,6 +38,10 @@ public class TestConfiguration {
 
     public AccountDataMapper accountDataMapper() {
         return Mockito.mock(AccountDataMapper.class);
+    }
+
+    public PasswordService passwordService() {
+        return Mockito.mock((PasswordService.class));
     }
 
 

@@ -1,6 +1,8 @@
 package com.product.managing.system.domain;
 
+import com.product.managing.system.dto.order.CancelOrderCommand;
 import com.product.managing.system.dto.order.OrderCommand;
+import com.product.managing.system.dto.order.UpdateOrderCommand;
 import com.product.managing.system.dto.product.CreateProductCommand;
 import com.product.managing.system.dto.product.ProductCommandResponse;
 import com.product.managing.system.dto.product.UpdateProductCommand;
@@ -25,7 +27,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.product.managing.system.UseCasesDomainServiceImpl.ORDER_CANCEL_SUCCESSFUL;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -151,5 +155,77 @@ public class UseCasesDomainServiceTest {
         assertNotNull(response.getOrderId());
         assertEquals(OrderStatus.APPROVED, response.getStatus());
         assertEquals("ORDER APPROVE AND SAVED", response.getMessage());
+    }
+
+    @Test
+    public void test_cancelOrder() {
+        var cancelOrderCommand = CancelOrderCommand
+                .builder()
+                .orderId(ORDER_ID)
+                .customerId(USER_ID)
+                .build();
+        doNothing().when(orderRepository).cancelOrder(ORDER_ID);
+        var response = useCasesDomainService.cancelOrder(cancelOrderCommand);
+        assertEquals(OrderStatus.CANCELLED, response.getStatus());
+        assertEquals(ORDER_CANCEL_SUCCESSFUL, response.getMessage());
+        assertEquals(ORDER_ID, response.getOrderId());
+
+    }
+
+    @Test
+    public void test_addItemsToOrder() {
+        var addItemCommand = UpdateOrderCommand
+                .builder()
+                .items(List.of(
+                                OrderItem.builder()
+                                        .quantity(1)
+                                        .product(product)
+                                        .orderId(ORDER_ID)
+                                        .subTotal(PRODUCT_PRICE)
+                                        .price(PRODUCT_PRICE)
+                                        .build()))
+                .customerId(USER_ID)
+                .order(order)
+                .build();
+        var newOrder = order.addItemToOrder(addItemCommand.getItems());
+        var newOrderPrice = new Money(BigDecimal.valueOf(400.00)).add(PRODUCT_PRICE);
+
+        assertEquals(2, newOrder.getItems().size());
+        assertEquals(newOrderPrice.getAmount(), newOrder.getPrice().getAmount());
+    }
+
+    @Test
+    public void test_removeItemsToOrder() {
+        var order = Order.builder()
+                .customerId(USER_ID)
+                .orderId(ORDER_ID)
+                .price(new Money(BigDecimal.valueOf(400.00)))
+                .items(List.of(
+                        OrderItem.builder()
+                                .quantity(2)
+                                .product(product)
+                                .orderId(ORDER_ID)
+                                .subTotal(new Money(BigDecimal.valueOf(400.00)))
+                                .price(PRODUCT_PRICE)
+                                .build()))
+                .build();
+        var addItemCommand = UpdateOrderCommand
+                .builder()
+                .items(List.of(
+                        OrderItem.builder()
+                                .quantity(1)
+                                .product(product)
+                                .orderId(ORDER_ID)
+                                .subTotal(PRODUCT_PRICE)
+                                .price(PRODUCT_PRICE)
+                                .build()))
+                .customerId(USER_ID)
+                .order(order)
+                .build();
+        var newOrder = order.removeFromOrder(addItemCommand.getItems());
+        var newOrderPrice = new Money(BigDecimal.valueOf(400.00)).subtract(PRODUCT_PRICE);
+
+        assertEquals(1, newOrder.getItems().size());
+        assertEquals(newOrderPrice.getAmount(), newOrder.getPrice().getAmount());
     }
 }

@@ -18,9 +18,9 @@ public interface UseCasesDomainService {
 
     OrderCommandResponse cancelOrder(CancelOrderCommand cancelOrderCommand);
 
-    OrderCommandResponse addItemsToOrder(AddItemCommand updateOrderCommand);
+    OrderCommandResponse addItemsToOrder(UpdateOrderCommand updateOrderCommand);
 
-    OrderCommandResponse removeItemsFromOrder(RemoveItemsCommand updateOrderCommand);
+    OrderCommandResponse removeItemsFromOrder(UpdateOrderCommand updateOrderCommand);
 
     ProductCommandResponse createProduct(CreateProductCommand createProductCommand);
 

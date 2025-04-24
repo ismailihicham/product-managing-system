@@ -39,14 +39,14 @@ public class OrderController {
 
     @PutMapping
     public ResponseEntity<OrderCommandResponse> addItemsInCart(@RequestBody UpdateOrderCommand addItems) {
-        var response = useCases.addItemsToOrder((AddItemCommand) addItems);
+        var response = useCases.addItemsToOrder(addItems);
         log.info("order is updated with new items");
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping
     public ResponseEntity<OrderCommandResponse> removeItemsInCart(@RequestBody UpdateOrderCommand removeItems) {
-        var response = useCases.removeItemsFromOrder((RemoveItemsCommand) removeItems);
+        var response = useCases.removeItemsFromOrder(removeItems);
         log.info("order is updated by removing some items");
         return ResponseEntity.ok(response);
     }

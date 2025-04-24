@@ -9,12 +9,13 @@ public class Money {
     private final BigDecimal amount;
 
     public Money(BigDecimal amount) {
-        this.amount = amount;
+        this.amount = setScale(amount);
     }
 
     public BigDecimal getAmount() {
         return amount;
     }
+
 
     public boolean isGreaterThanZero() {
         return this.amount != null && this.amount.compareTo(BigDecimal.ZERO) > 0;
@@ -36,12 +37,12 @@ public class Money {
         return new Money(setScale(this.amount.multiply(new BigDecimal(multiplier))));
     }
 
-    private BigDecimal setScale(BigDecimal input) {
+    private static BigDecimal setScale(BigDecimal input) {
         return input.setScale(2, RoundingMode.HALF_EVEN);
     }
 
 
-    public boolean equals(Money o) {
+    public boolean equal(Money o) {
         if (o == null) return false;
         return Objects.equals(amount, o.amount);
     }

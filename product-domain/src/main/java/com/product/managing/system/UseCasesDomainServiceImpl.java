@@ -38,6 +38,8 @@ public class UseCasesDomainServiceImpl implements UseCasesDomainService {
     private final AccountRepository accountRepository;
 
     public static final String PROUCT_REMOVE_SUCCESSFUL = "product is removed successfully";
+    public static final String ORDER_CANCEL_SUCCESSFUL = "Order cancelled successfully";
+    public static final String ORDER_UPDATED_SUCCESSFUL = "order is updated successfully";
 
     public UseCasesDomainServiceImpl(
             OrderRepository orderRepository, OrderDataMapper orderMapper, AccountDataMapper accountMapper,
@@ -73,31 +75,31 @@ public class UseCasesDomainServiceImpl implements UseCasesDomainService {
         return OrderCommandResponse.builder()
                 .orderId(cancelOrderCommand.getOrderId())
                 .status(OrderStatus.CANCELLED)
-                .message("Order cancelled successfully")
+                .message(ORDER_CANCEL_SUCCESSFUL)
                 .build();
     }
 
     @Override
-    public OrderCommandResponse addItemsToOrder(AddItemCommand updateOrderCommand) {
+    public OrderCommandResponse addItemsToOrder(UpdateOrderCommand updateOrderCommand) {
         var newItems = updateOrderCommand.getItems();
         var order = updateOrderCommand.getOrder();
-        order.addItemToOrder(newItems);
-        Order result = orderRepository.modifyOrder(order);
+        var newOrder = order.addItemToOrder(newItems);
+        Order result = orderRepository.modifyOrder(newOrder);
         log.info("Order with id {} has updated with more items", order.getOrderId());
         return OrderCommandResponse.builder()
                 .orderId(result.getOrderId())
                 .status(OrderStatus.UPDATED)
-                .message("order is updated")
+                .message(ORDER_UPDATED_SUCCESSFUL)
                 .build();
     }
 
     @Override
-    public OrderCommandResponse removeItemsFromOrder(RemoveItemsCommand updateOrderCommand) {
+    public OrderCommandResponse removeItemsFromOrder(UpdateOrderCommand updateOrderCommand) {
         findAccount(updateOrderCommand.getCustomerId());
         var itemsToRemove = updateOrderCommand.getItems();
         var order = updateOrderCommand.getOrder();
-        order.removeFromOrder(itemsToRemove);
-        Order result = orderRepository.modifyOrder(order);
+        var newOrder = order.removeFromOrder(itemsToRemove);
+        Order result = orderRepository.modifyOrder(newOrder);
         log.info("Order with id {} has updated by removing some items", order.getOrderId());
         return OrderCommandResponse.builder()
                 .orderId(result.getOrderId())
@@ -186,9 +188,9 @@ public class UseCasesDomainServiceImpl implements UseCasesDomainService {
 
     @Override
     public AccountCommandResponse createAccount(CreateAccountCommand createAccountCommand) {
-        var response = accountRepository.createAccount(
-                accountMapper.createAccountCommandToAccount(createAccountCommand)
-        );
+        var account = accountMapper.createAccountCommandToAccount(createAccountCommand);
+        account.validateAccountPersonalInfo();
+        var response = accountRepository.createAccount(account);
         return accountMapper.accountToAccountCommandResponse(response);
     }
 

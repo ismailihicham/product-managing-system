@@ -20,7 +20,7 @@ public class Account {
 
     public void validateAccountPersonalInfo() {
         if (this.firstName == null || this.lastName == null || this.email == null) {
-            throw new DomainException("the account with id" + this.accountId + "need required data to be validated");
+            throw new DomainException("the account need required data to be crated");
         }
     }
 }

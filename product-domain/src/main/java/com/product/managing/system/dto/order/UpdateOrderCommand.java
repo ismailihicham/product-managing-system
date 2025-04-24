@@ -2,6 +2,7 @@ package com.product.managing.system.dto.order;
 
 import com.product.managing.system.entities.Order;
 import com.product.managing.system.entities.OrderItem;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +11,8 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public abstract class UpdateOrderCommand {
+@Builder
+public class UpdateOrderCommand {
     private List<OrderItem> items;
     private Order order;
     private UUID customerId;

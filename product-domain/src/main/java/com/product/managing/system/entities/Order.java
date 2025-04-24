@@ -1,9 +1,12 @@
 package com.product.managing.system.entities;
 
+import com.product.managing.system.exception.DomainException;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,7 +19,6 @@ public class Order {
     private Money price;
     private List<OrderItem> items;
     private OrderStatus status;
-    private List<String> failuresMessages;
 
     public void initializeOrder() {
         this.orderId = UUID.randomUUID();
@@ -26,37 +28,54 @@ public class Order {
 
     private void initializeOrderItems() {
         for (OrderItem item : items) {
+            if (!item.isPriceValid()) {
+                throw new DomainException("Order item price is not valid!");
+            }
             item.initializeOrderItem(this.getOrderId());
         }
     }
 
-    public void addItemToOrder(List<OrderItem> newItems) {
-        for (OrderItem item : items) {
+    public Order addItemToOrder(List<OrderItem> newItems) {
+        for (OrderItem item : newItems) {
             item.initializeOrderItem(this.getOrderId());
         }
-        this.items.addAll(newItems);
+        List<OrderItem> oldListToUpdate = new ArrayList<>(this.items);
+        oldListToUpdate.addAll(newItems);
+        this.items = oldListToUpdate;
         var total = newItems.stream()
                 .map(item -> item.getSubTotal())
                 .reduce(Money.ZERO, Money::add);
         this.price = price.add(total);
+        return this;
 
     }
 
-    public void removeFromOrder(List<OrderItem> itemsToRemove) {
-        this.items.removeIf(item ->
-                itemsToRemove.stream()
-                        .anyMatch(toRemove -> toRemove.equals(item))
-        );
-        for (OrderItem item : items) {
+    public Order removeFromOrder(List<OrderItem> itemsToRemove) {
+        List<OrderItem> oldListToUpdate = new ArrayList<>(this.items);
+        Iterator<OrderItem> iterator = oldListToUpdate.iterator();
+        while (iterator.hasNext()) {
+            OrderItem item = iterator.next();
+
+            for (OrderItem i : itemsToRemove) {
+                if (item.getProduct().equals(i.getProduct())) {
+                    item.setQuantity(item.getQuantity() - i.getQuantity());
+                }
+            }
+
+            if (item.getQuantity() <= 0) {
+                iterator.remove();
+            }
+        }
+
+        for (OrderItem item : oldListToUpdate) {
             item.initializeOrderItem(this.getOrderId());
         }
         var total = itemsToRemove.stream()
                 .map(item -> item.getSubTotal())
                 .reduce(Money.ZERO, Money::add);
         this.price = price.subtract(total);
+        return this;
 
     }
-
-
 
 }

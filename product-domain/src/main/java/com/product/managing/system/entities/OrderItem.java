@@ -19,8 +19,7 @@ public class OrderItem {
 
     public boolean isPriceValid() {
         return price.isGreaterThanZero()
-                && price.equals(product.getPrice())
-                && price.multiply(quantity).equals(subTotal);
+                && price.multiply(quantity).equal(subTotal);
     }
 
     public void initializeOrderItem(UUID orderId) {

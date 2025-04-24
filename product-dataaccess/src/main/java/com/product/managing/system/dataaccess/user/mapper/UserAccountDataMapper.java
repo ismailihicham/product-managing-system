@@ -10,15 +10,11 @@ public class UserAccountDataMapper {
     public UserEntity accountToUserEntity(Account account) {
         return UserEntity.builder()
                 .userId(account.getAccountId())
-                .userName(generateUsername(account.getFirstName(), account.getLastName()))
+                .userName(account.getUserName())
                 .firstName(account.getFirstName())
                 .password(account.getPassword())
                 .email(account.getEmail())
                 .build();
-    }
-
-    private String generateUsername(String firstName, String lastName) {
-        return (firstName + "." + lastName).toLowerCase().replaceAll("\\s+", "");
     }
 
     public Account userToAccount(UserEntity user) {
