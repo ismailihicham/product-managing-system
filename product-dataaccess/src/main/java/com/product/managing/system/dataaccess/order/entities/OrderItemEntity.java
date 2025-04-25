@@ -16,9 +16,8 @@ import java.util.UUID;
 @Table(name = "order_items")
 public class OrderItemEntity {
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private Long orderItemId;
+    private UUID orderItemId;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "ORDER_ID")

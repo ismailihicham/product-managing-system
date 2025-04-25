@@ -1,6 +1,8 @@
 package com.product.managing.system.rest;
 
 import com.product.managing.system.dto.order.*;
+import com.product.managing.system.mapper.OrderApplicationMapper;
+import com.product.managing.system.model.CreateOrderCommand;
 import com.product.managing.system.ports.input.UseCasesDomainService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -14,14 +16,16 @@ import java.util.UUID;
 public class OrderController {
 
     private final UseCasesDomainService useCases;
+    private final OrderApplicationMapper orderMapper;
 
-    public OrderController(UseCasesDomainService useCases) {
+    public OrderController(UseCasesDomainService useCases, OrderApplicationMapper orderMapper) {
         this.useCases = useCases;
+        this.orderMapper = orderMapper;
     }
 
     @PostMapping
-    public ResponseEntity<OrderCommandResponse> createItemsInCart(@RequestBody OrderCommand createOrderCommand) {
-        var response = useCases.createOrder(createOrderCommand);
+    public ResponseEntity<OrderCommandResponse> createItemsInCart(@RequestBody CreateOrderCommand createOrderCommand) {
+        var response = useCases.createOrder(orderMapper.createOrderCommandToDomain(createOrderCommand));
         log.info("order created");
         return ResponseEntity.ok(response);
     }

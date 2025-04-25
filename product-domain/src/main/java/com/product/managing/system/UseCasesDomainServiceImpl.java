@@ -54,9 +54,10 @@ public class UseCasesDomainServiceImpl implements UseCasesDomainService {
     }
 
     @Override
-    public OrderCommandResponse createOrder(OrderCommand createOrderCommand) {
+    public OrderCommandResponse createOrder(CreateOrderCommandDomain createOrderCommand) {
         findAccount(createOrderCommand.getCustomerId());
         createOrderCommand.getOrder().initializeOrder();
+        findProductAndAddToOrderItem(createOrderCommand);
         Order order = orderMapper.orderCommandToOrder(createOrderCommand);
         Order result = orderRepository.saveOrder(order);
         result.setStatus(OrderStatus.APPROVED);
@@ -66,6 +67,14 @@ public class UseCasesDomainServiceImpl implements UseCasesDomainService {
                 .status(order.getStatus())
                 .message("ORDER APPROVE AND SAVED")
                 .build();
+    }
+
+    private void findProductAndAddToOrderItem(CreateOrderCommandDomain createOrderCommand) {
+        createOrderCommand.getOrder().getItems().stream().map(item -> {
+           var p = findProduct(item.getProduct().getProductId());
+           item.setProduct(p);
+            return item;
+        }).toList();
     }
 
     @Override

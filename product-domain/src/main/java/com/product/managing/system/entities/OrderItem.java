@@ -12,6 +12,7 @@ import java.util.UUID;
 @Builder
 public class OrderItem {
     private UUID orderId;
+    private UUID orderItemId;
     private Product product;
     private int quantity;
     private Money price;
@@ -24,6 +25,7 @@ public class OrderItem {
 
     public void initializeOrderItem(UUID orderId) {
         this.orderId = orderId;
+        this.orderItemId = UUID.randomUUID();
     }
 
     @Override

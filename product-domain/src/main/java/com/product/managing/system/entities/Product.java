@@ -10,7 +10,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
-@Builder
 @Getter
 @Setter
 public class Product {
@@ -29,6 +28,12 @@ public class Product {
     private ZonedDateTime createdAt;
     private ZonedDateTime updatedAt;
 
+    public Product() {
+    }
+    public Product(UUID productId) {
+        this.productId = productId;
+    }
+
     public void initializeProduct() {
         this.productId = UUID.randomUUID();
         this.inventoryStatus = InventoryStatus.OUTOFSTOCK;
@@ -43,7 +48,7 @@ public class Product {
 
     public Product updateProduct(UpdateProductCommand updateProductCommand) {
         var p = updateProductCommand.getProduct();
-        return Product.builder()
+        return new Product.Builder()
                 .productId(updateProductCommand.getProductId())
                 .code(keepIfNull(p.getCode(), getCode()))
                 .name(keepIfNull(p.getName(), getName()))
@@ -65,6 +70,84 @@ public class Product {
         return newValue != null ? newValue : currentValue;
     }
 
+    public static final class Builder {
+        private Product product = new Product();
 
+        public Builder() {
+        }
 
+        public Builder productId(UUID val) {
+            product.productId = val;
+            return this;
+        }
+
+        public Builder code(String val) {
+            product.code = val;
+            return this;
+        }
+
+        public Builder name(String val) {
+            product.name = val;
+            return this;
+        }
+
+        public Builder description(String val) {
+            product.description = val;
+            return this;
+        }
+
+        public Builder image(String val) {
+            product.image = val;
+            return this;
+        }
+
+        public Builder category(String val) {
+            product.category = val;
+            return this;
+        }
+
+        public Builder price(Money val) {
+            product.price = val;
+            return this;
+        }
+
+        public Builder quantity(int val) {
+            product.quantity = val;
+            return this;
+        }
+
+        public Builder internalReference(String val) {
+            product.internalReference = val;
+            return this;
+        }
+
+        public Builder shellId(Long val) {
+            product.shellId = val;
+            return this;
+        }
+
+        public Builder inventoryStatus(InventoryStatus val) {
+            product.inventoryStatus = val;
+            return this;
+        }
+
+        public Builder rating(Long val) {
+            product.rating = val;
+            return this;
+        }
+
+        public Builder createdAt(ZonedDateTime val) {
+            product.createdAt = val;
+            return this;
+        }
+
+        public Builder updatedAt(ZonedDateTime val) {
+            product.updatedAt = val;
+            return this;
+        }
+
+        public Product build() {
+            return product;
+        }
+    }
 }

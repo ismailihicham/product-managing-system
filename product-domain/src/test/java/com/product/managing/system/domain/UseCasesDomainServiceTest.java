@@ -1,7 +1,7 @@
 package com.product.managing.system.domain;
 
 import com.product.managing.system.dto.order.CancelOrderCommand;
-import com.product.managing.system.dto.order.OrderCommand;
+import com.product.managing.system.dto.order.CreateOrderCommandDomain;
 import com.product.managing.system.dto.order.UpdateOrderCommand;
 import com.product.managing.system.dto.product.CreateProductCommand;
 import com.product.managing.system.dto.product.ProductCommandResponse;
@@ -57,7 +57,7 @@ public class UseCasesDomainServiceTest {
     private UseCasesDomainService useCasesDomainService;
 
     private CreateProductCommand createProductCommand;
-    private OrderCommand createOrderCommand;
+    private CreateOrderCommandDomain createOrderCommand;
     private Order order;
     private Product product;
     private final static Money PRODUCT_PRICE = new Money(BigDecimal.valueOf(200.00));
@@ -75,7 +75,7 @@ public class UseCasesDomainServiceTest {
                 .userName("jean.pereira")
                 .email("jean.pereira@gmail.com")
                 .build();
-        product = Product.builder()
+        product = new Product.Builder()
                 .productId(PRODUCT_ID)
                 .name("product-1")
                 .category("food")
@@ -103,7 +103,7 @@ public class UseCasesDomainServiceTest {
                                 .price(PRODUCT_PRICE)
                                 .build()))
                 .build();
-        createOrderCommand = OrderCommand.builder()
+        createOrderCommand = CreateOrderCommandDomain.builder()
                 .order(order)
                 .customerId(USER_ID)
                 .build();
@@ -122,7 +122,7 @@ public class UseCasesDomainServiceTest {
 
     @Test
     public void testUpdateProduct() {
-        var productUp = Product.builder()
+        var productUp = new Product.Builder()
                 .name("product-updated")
                 .code("BB_1122")
                 .category("gaming")
@@ -148,6 +148,23 @@ public class UseCasesDomainServiceTest {
 
     @Test
     public void testCreateOrder() {
+        var order = Order.builder()
+                .customerId(USER_ID)
+                .orderId(ORDER_ID)
+                .price(new Money(BigDecimal.valueOf(400.00)))
+                .items(List.of(
+                        OrderItem.builder()
+                                .product(new Product(PRODUCT_ID))
+                                .quantity(2)
+                                .subTotal(new Money(BigDecimal.valueOf(400.00)))
+                                .price(PRODUCT_PRICE)
+                                .build())
+                ).build();
+        var createOrderCommand = CreateOrderCommandDomain.builder()
+                .order(order)
+                .customerId(USER_ID)
+                .build();
+        when(productRepository.findById(PRODUCT_ID)).thenReturn(Optional.ofNullable(product));
         when(accountRepository.findAccount(USER_ID)).thenReturn(account);
         when(orderDataMapper.orderCommandToOrder(any())).thenReturn(order);
         when(orderRepository.saveOrder(any())).thenReturn(order);

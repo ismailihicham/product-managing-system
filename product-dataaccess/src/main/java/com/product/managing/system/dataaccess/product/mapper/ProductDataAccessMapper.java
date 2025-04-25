@@ -26,7 +26,7 @@ public class ProductDataAccessMapper {
     }
 
     public Product productEntityToProduct(ProductEntity productEntity) {
-        return Product.builder()
+        return new Product.Builder()
                 .productId(productEntity.getProductId())
                 .code(productEntity.getCode())
                 .category(productEntity.getCategory())

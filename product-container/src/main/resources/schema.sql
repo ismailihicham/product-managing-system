@@ -68,7 +68,7 @@ CREATE TABLE orders (
 DROP TABLE IF EXISTS order_items;
 
 CREATE TABLE order_items (
-    order_item_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    order_item_id UUID PRIMARY KEY,
     order_id UUID NOT NULL,
     product_id UUID NOT NULL,
     price DECIMAL(10, 2) NOT NULL,
@@ -83,9 +83,9 @@ INSERT INTO orders (id, customer_id, price) VALUES
 ('c3fa2c56-6e3c-4d0d-baf9-e98a6b2b234d', '9f8a62b0-1e1c-4a6a-b0f3-c6d3f0e9a7fa', 1559.97);
 
 -- Insert order items
-INSERT INTO order_items (order_id, product_id, price, quantity, sub_total) VALUES
-('c3fa2c56-6e3c-4d0d-baf9-e98a6b2b234d', 'ed0f83b8-baba-47b4-83fa-b5a19f6076cf', 1499.99, 1, 1499.99),
-('c3fa2c56-6e3c-4d0d-baf9-e98a6b2b234d', 'bd0f83b8-baba-47b4-83fa-b5a19f6076c2', 29.99, 2, 59.98);
+INSERT INTO order_items (order_item_id, order_id, product_id, price, quantity, sub_total) VALUES
+('4e3a2d51-7f4f-4f34-9a64-2a759e8c9f21','c3fa2c56-6e3c-4d0d-baf9-e98a6b2b234d', 'ed0f83b8-baba-47b4-83fa-b5a19f6076cf', 1499.99, 1, 1499.99),
+('b5cd1c4c-206e-4b64-9e75-cf1c4d2f1c2e','c3fa2c56-6e3c-4d0d-baf9-e98a6b2b234d', 'bd0f83b8-baba-47b4-83fa-b5a19f6076c2', 29.99, 2, 59.98);
 
 
 

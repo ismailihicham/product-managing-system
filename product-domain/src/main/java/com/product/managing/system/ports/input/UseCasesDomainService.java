@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public interface UseCasesDomainService {
 
-    OrderCommandResponse createOrder(OrderCommand createOrderCommand);
+    OrderCommandResponse createOrder(CreateOrderCommandDomain createOrderCommand);
 
     OrderCommandResponse cancelOrder(CancelOrderCommand cancelOrderCommand);
 
