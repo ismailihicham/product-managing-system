@@ -6,3 +6,4 @@ the product-dataaccess module here we manage the calls with database , it depend
 the product-application here I implement the controllers with routes that will be called by end users.
 product-container module this module have dependency to all modules and here we can launch our application.
 this project is build with maven and java21 and using intellij IDE
+to create an account you should run security-service, it runs on 9898 and create a token for user admin with password in users.yaml, then this token should be added to the requst /account to add un account, this projet is running on 8080 port
