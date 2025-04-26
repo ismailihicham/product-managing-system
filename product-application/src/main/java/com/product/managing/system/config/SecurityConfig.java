@@ -1,7 +1,7 @@
 package com.product.managing.system.config;
 
-import com.product.managing.system.rest.execptions.EntryPontAccessHandler;
-import com.product.managing.system.rest.execptions.RoleAccessDeniedHandler;
+import com.product.managing.system.authentication.handler.EntryPontAccessHandler;
+import com.product.managing.system.authentication.handler.RoleAccessDeniedHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;

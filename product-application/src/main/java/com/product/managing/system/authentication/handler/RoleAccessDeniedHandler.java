@@ -1,7 +1,7 @@
-package com.product.managing.system.rest.execptions;
+package com.product.managing.system.authentication.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.product.managing.system.rest.response.AuthentificationResponse;
+import com.product.managing.system.authentication.response.AuthentificationResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

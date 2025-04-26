@@ -1,4 +1,4 @@
-package com.product.managing.system.rest.response;
+package com.product.managing.system.authentication.response;
 
 public record AuthentificationResponse(String code,String message) {
 }
