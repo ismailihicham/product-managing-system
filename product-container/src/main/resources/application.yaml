@@ -19,6 +19,8 @@ spring:
        myAccount
       password:
        12345app
+rsa:
+  public-key: classpath:certs/public.pem
 
 logging:
   level:

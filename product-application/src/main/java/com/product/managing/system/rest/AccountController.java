@@ -6,6 +6,7 @@ import com.product.managing.system.dto.account.GetAccountResponse;
 import com.product.managing.system.ports.input.UseCasesDomainService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -21,6 +22,7 @@ public class AccountController {
         this.useCases = useCases;
     }
     @PostMapping
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<AccountCommandResponse> createAccount(@RequestBody CreateAccountCommand createAccountCommand) {
         AccountCommandResponse response = useCases.createAccount(createAccountCommand);
         log.info(
